@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Atividades</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .crown-container {
+            position: relative;
+            padding-top: 2rem;
+        }
+        .crown {
+            position: absolute;
+            top: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2.5rem;
+            height: 2.5rem;
+            color: #f39c12;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            padding: 24px;
+            border-radius: 1rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 p-6 min-h-screen">
+    <div class="max-w-4xl mx-auto space-y-8">
+        <header class="bg-white p-6 rounded-xl shadow-lg">
+            <h1 class="text-4xl font-bold text-center text-gray-900 mb-2">Relatório de Atividades</h1>
+            <p class="text-center text-gray-600">Análise de atividades e versionamento com base nos dados fornecidos.</p>
+        </header>
+
+        <!-- Visão Geral -->
+        <section class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-600 border-b-2 border-blue-600 pb-2">Visão Geral</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg text-center shadow-sm cursor-pointer" onclick="showDetails('all_items', 'all')">
+                    <h3 class="text-lg font-medium text-gray-700">Total de Itens</h3>
+                    <p class="text-3xl font-bold text-blue-600 mt-1">61</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg text-center shadow-sm cursor-pointer" onclick="showDetails('versions', 'all')">
+                    <h3 class="text-lg font-medium text-gray-700">Total de Versionamentos</h3>
+                    <p class="text-3xl font-bold text-blue-600 mt-1">21</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg text-center shadow-sm cursor-pointer" onclick="showDetails('hotfixes', 'all')">
+                    <h3 class="text-lg font-medium text-gray-700">Hotfixes</h3>
+                    <p class="text-3xl font-bold text-blue-600 mt-1">10</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg text-center shadow-sm cursor-pointer" onclick="showDetails('releases', 'all')">
+                    <h3 class="text-lg font-medium text-gray-700">Releases</h3>
+                    <p class="text-3xl font-bold text-blue-600 mt-1">10</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Atividades por Tipo (Gráfico) -->
+        <section class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-600 border-b-2 border-blue-600 pb-2">Atividades por Tipo</h2>
+            <div class="w-full h-80">
+                <canvas id="typeChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Ranking de Atividades -->
+        <section class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-semibold mb-6 text-blue-600 border-b-2 border-blue-600 pb-2">Ranking de Atividades</h2>
+            <div class="space-y-4">
+                <div class="crown-container bg-gray-50 p-4 rounded-lg flex flex-col items-center shadow-sm">
+                    <svg class="crown" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2a10 10 0 0 0-8 16.5V22h16v-3.5A10 10 0 0 0 12 2zm0 18c-3.6 0-6.6-2.5-7.7-6H19.7c-1.1 3.5-4.1 6-7.7 6zM12 4c-3.3 0-6 2.7-6 6a6 6 0 0 0 12 0c0-3.3-2.7-6-6-6z"/>
+                    </svg>
+                    <div class="w-full text-center mt-6">
+                        <div class="text-xl font-medium text-gray-900">Lucas Silva de Oliveira</div>
+                        <div class="text-2xl font-bold text-blue-600">14</div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center shadow-sm">
+                    <div class="text-xl font-medium">Marlon Secundo de Oliveira Ferreira</div>
+                    <div class="text-2xl font-bold text-blue-600">12</div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center shadow-sm">
+                    <div class="text-xl font-medium">Yale Alves Moura Velasco</div>
+                    <div class="text-2xl font-bold text-blue-600">5</div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center shadow-sm">
+                    <div class="text-xl font-medium">Paulo Almeida</div>
+                    <div class="text-2xl font-bold text-blue-600">2</div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center shadow-sm">
+                    <div class="text-xl font-medium">Maria Victória Miranda</div>
+                    <div class="text-2xl font-bold text-blue-600">1</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Módulos e Repositórios -->
+        <section class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-blue-600 border-b-2 border-blue-600 pb-2">Módulos com Maior Atividade</h2>
+                    <ul class="space-y-2">
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('modules', 'Pós atendimento')">
+                            <span class="font-medium">Pós atendimento</span><span class="text-blue-600 font-bold">7</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('modules', 'NPS')">
+                            <span class="font-medium">NPS</span><span class="text-blue-600 font-bold">6</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('modules', 'API Oficial - META')">
+                            <span class="font-medium">API Oficial - META</span><span class="text-blue-600 font-bold">6</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('modules', 'Geral')">
+                            <span class="font-medium">Geral</span><span class="text-blue-600 font-bold">5</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('modules', 'Campanhas')">
+                            <span class="font-medium">Campanhas</span><span class="text-blue-600 font-bold">4</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-blue-600 border-b-2 border-blue-600 pb-2">Repositórios com Mais Alterações</h2>
+                    <ul class="space-y-2">
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('repositories', 'zapisp')">
+                            <span class="font-medium">zapisp</span><span class="text-blue-600 font-bold">5</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('repositories', 'zapisp-mysql')">
+                            <span class="font-medium">zapisp-mysql</span><span class="text-blue-600 font-bold">3</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('repositories', 'zapisp-integrador')">
+                            <span class="font-medium">zapisp-integrador</span><span class="text-blue-600 font-bold">2</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('repositories', 'Outros')">
+                            <span class="font-medium">Outros</span><span class="text-blue-600 font-bold">1</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Origens e Empresas -->
+        <section class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-blue-600 border-b-2 border-blue-600 pb-2">Principais Origens</h2>
+                    <ul class="space-y-2">
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('origins', 'Suporte')">
+                            <span class="font-medium">Suporte</span><span class="text-blue-600 font-bold">18</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('origins', 'CS')">
+                            <span class="font-medium">CS</span><span class="text-blue-600 font-bold">8</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-blue-600 border-b-2 border-blue-600 pb-2">Empresas com Mais Atendimentos</h2>
+                    <ul class="space-y-2">
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('companies', 'TELECOM FOZ')">
+                            <span class="font-medium">TELECOM FOZ</span><span class="text-blue-600 font-bold">3</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('companies', 'STAR 1 INTERNET')">
+                            <span class="font-medium">STAR 1 INTERNET</span><span class="text-blue-600 font-bold">3</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('companies', 'Microrcim')">
+                            <span class="font-medium">Microrcim</span><span class="text-blue-600 font-bold">2</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('companies', 'VARIAX SERVICOS DE INTERNET')">
+                            <span class="font-medium">VARIAX SERVICOS DE INTERNET</span><span class="text-blue-600 font-bold">2</span>
+                        </li>
+                        <li class="p-3 bg-gray-50 rounded-lg flex justify-between items-center shadow-sm cursor-pointer" onclick="showDetails('companies', 'CONECTSUL')">
+                            <span class="font-medium">CONECTSUL</span><span class="text-blue-600 font-bold">2</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Observações -->
+        <section class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-600 border-b-2 border-blue-600 pb-2">Observações</h2>
+            <p class="text-gray-700">A análise dos dados indica uma alta frequência de hotfixes e releases, o que pode sugerir a necessidade de um processo de QA mais rigoroso antes dos deploys. A maioria das demandas vem diretamente do Suporte, o que aponta para uma forte colaboração na resolução de problemas do cliente.</p>
+        </section>
+
+    </div>
+
+    <!-- Modal para detalhes -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center pb-3 border-b-2 border-blue-600 mb-4">
+                <h3 id="modalTitle" class="text-xl font-semibold text-blue-600">Detalhes</h3>
+                <button onclick="closeDetails()" class="text-gray-500 hover:text-gray-800 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <ul id="modalList" class="space-y-2 text-gray-700"></ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script>
+        const data = {
+            all_items: [
+                'Bloquear rotina do provedor', 'Problema com o envio da mensagem de aniversário', 'PA enviado pela metade (Meta)', 'Ativação de acesso à plataforma via botão e form do N8N', 'Botão de forçar integração não funciona no SGP', 'Verificar erro de envio de mensagem (META)', 'Possível erro no filtro de envio para clientes arquivados', 'Ajuste de nota', 'Quantidade de Mensagens na Fila Hubsoft', 'Relatório de clientes que não receberam uma campanha', 'Resposta da pesquisa personalizada não registrada', 'Ajustar tempo de envio', 'Alteração de domínio', '"Desacoplar" Z-api da Zapisp', 'Divergência de base de clientes', 'Instabilidade NPS', 'Criar fluxo do NPS', 'Falha no disparo de mensagens de cobrança para contatos específicos', 'Ordem das mensagens de pagamento', 'Ajuste de notas', 'Mensagem Automática Sem Custos Adicionais', 'Exibir dados necessários para integração', 'Ajuste de nota de PA', 'Inserir banner', 'Ajuste de nptas de NPS e Csat', 'Ajuste de resposta de Csat', 'Erro na hora de cadastrar o lead no link de indicações', 'Correção no botão da FiberSchool: tamanho da imagem e comportamento do link', 'PA sem enviar (SGP; envios pela Meta)', 'Permitir o uso de múltiplos números de WhatsApp', 'BUG- Seleção de canal em campanhas mostra apenas um canal', 'Atualização da Tela de Configurações da Meta', 'Relatório Semanal não é enviado ao cliente', 'Instabilidade pós atendimento', 'Exporta o dado de CPF da aba de Comissões no MKTI', 'poc secret', 'Enviar template NPS Meta sem variáveis', 'Botão do código de barras', 'Retirar 2 resultados de NPS erroneos', 'Bug na sincronização de telefones da meta', 'Mensagens de disparos para clientes inadimplentes', 'Instabilidade PA', 'Remover envios testes', 'Atualizar a data do pós atendimento', 'Conflito no envio da mensagem', 'Erro no analisador de chamados', 'Criar opção de selecionar campo de contato no integrador do Voalle', 'Exclusão dos S/N da base de clientes', 'Aviso de desconexão de instância sem chegar ao responsável', 'Configuração do domínio', 'Problema no envio pela meta', 'Autonomia do Suporte para Gerenciar Configurações Operacionais', 'Mudar velocidade de envio das mensagens', 'Alterar tempo de envio', 'Excluir leads perdidos', 'Configurar múltiplos telefones para alertas', 'Alterar tempo de envio NPS', 'Ajuste da pergunta de resolutividade', 'Adicionar coringa para o número do lead', 'Planilha de não enviadas'
+            ],
+            versions: [
+                '8.7.10', '8.7.9', '8.7.8', '8.78', '8.7.15', '2.1.22', '8.8.0',
+                '8.7.12', '1.0.13', '8.7.14', '8.8.3', '2.5.4', '2.5.5', '8.8.4',
+                '2.5.3', '2.1.24', '1.2.5'
+            ],
+            hotfixes: [
+                '8.7.10 (x2)', '8.7.9 (x1)', '8.7.8 (x1)', '8.78 (x1)', '8.7.15 (x1)',
+                '8.7.12 (x1)', '8.7.14 (x1)', '8.8.3 (x1)', '2.5.5 (x1)'
+            ],
+            releases: [
+                '8.8.0 (x6)', 'N/A (x3)', '2.1.24 (x1)', '8.8.2 (x1)'
+            ],
+            modules: {
+                'Pós atendimento': ['PA enviado pela metade (Meta)', 'Ajuste de nota', 'Ajuste de nota de PA', 'Ajuste de resposta de Csat', 'PA sem enviar (SGP; envios pela Meta)', 'Instabilidade pós atendimento', 'Atualizar a data do pós atendimento'],
+                'NPS': ['Verificar erro de envio de mensagem (META)', 'Instabilidade NPS', 'Retirar 2 resultados de NPS erroneos', 'Ajuste de notas de NPS e Csat', 'Alterar tempo de envio NPS', 'Exibir dados necessários para integração', 'BUG- Seleção de canal em campanhas mostra apenas um canal'],
+                'API Oficial - META': ['Verificar erro de envio de mensagem (META)', 'Alteração de domínio', 'Criar fluxo do NPS', 'Problema no envio pela meta', 'Mensagens de disparos para clientes inadimplentes', 'Planilha de não enviadas'],
+                'Geral': ['Ativação de acesso à plataforma via botão e form do N8N', 'Falha no disparo de mensagens de cobrança para contatos específicos', 'Correção no botão da FiberSchool', 'Remover envios testes', 'poc secret'],
+                'Campanhas': ['Problema com o envio da mensagem de aniversário', 'Problema no envio pela meta', 'Ordem das mensagens de pagamento', 'Conflito no envio da mensagem', 'Ajustar tempo de envio']
+            },
+            repositories: {
+                'zapisp': ['zapisp', 'zapisp', 'zapisp-mysql', 'zapisp-mysql', 'zapisp-mysql'],
+                'zapisp-mysql': ['zapisp-mysql', 'zapisp-mysql', 'zapisp-mysql'],
+                'zapisp-integrador': ['zapisp-integrador', 'zapisp-integrador'],
+                'Outros': ['zapisp-ms-relatorios']
+            },
+            origins: {
+                'Suporte': ['Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte', 'Suporte'],
+                'CS': ['CS', 'CS', 'CS', 'CS', 'CS', 'CS', 'CS', 'CS']
+            },
+            companies: {
+                'TELECOM FOZ': ['TELECOM FOZ', 'TELECOM FOZ', 'TELECOM FOZ'],
+                'STAR 1 INTERNET': ['STAR 1 INTERNET', 'STAR 1 INTERNET', 'STAR 1 INTERNET'],
+                'Microrcim': ['Microrcim', 'Microrcim'],
+                'VARIAX SERVICOS DE INTERNET': ['VARIAX SERVICOS DE INTERNET', 'VARIAX SERVICOS DE INTERNET'],
+                'CONECTSUL': ['CONECTSUL', 'CONECTSUL']
+            }
+        };
+
+        const modal = document.getElementById('detailsModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalList = document.getElementById('modalList');
+
+        function showDetails(dataType, itemKey) {
+            modalList.innerHTML = '';
+            let items = [];
+            let titleText = '';
+
+            if (dataType === 'all_items') {
+                items = data.all_items;
+                titleText = 'Todos os Itens';
+            } else if (dataType === 'versions') {
+                items = data.versions;
+                titleText = 'Versionamentos';
+            } else if (dataType === 'hotfixes') {
+                items = data.hotfixes;
+                titleText = 'Hotfixes por Versão';
+            } else if (dataType === 'releases') {
+                items = data.releases;
+                titleText = 'Releases por Versão';
+            } else if (data[dataType] && data[dataType][itemKey]) {
+                items = data[dataType][itemKey];
+                titleText = itemKey;
+            }
+
+            if (items.length > 0) {
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    li.className = "bg-gray-100 p-2 rounded-lg";
+                    modalList.appendChild(li);
+                });
+                modalTitle.textContent = titleText;
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeDetails() {
+            modal.style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            Chart.register(ChartDataLabels);
+            const ctx = document.getElementById('typeChart').getContext('2d');
+            const typeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Tasks', 'Bugs', 'Features'],
+                    datasets: [{
+                        label: 'Quantidade',
+                        data: [27, 12, 2],
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.8)',
+                            'rgba(231, 76, 60, 0.8)',
+                            'rgba(46, 204, 113, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(46, 204, 113, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            color: '#4a5568',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value) => value
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
